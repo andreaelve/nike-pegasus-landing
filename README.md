@@ -4,26 +4,6 @@ A mobile-first product landing page for the Nike Pegasus 43 running shoe, built 
 
 **Live:** https://nike-pegasus-landing.vercel.app
 
-## Prompt notes
-
-Plan prompt, word for word:
-
-> Write me plan for a phone-first landing page for Nike's customers to buy the new Pegasus 43 running shoe. Place the content in this order: Photos, Price, Sizes, Tech Copy, Reviews. Use the stock list information in nike_pegasus_size_stock.json for the content. Ensure there's to layout-shifts, including holding space for photos and fonts when loading. Give me the plan in headed sections, with each part's order and size at 375 pixels wide.
-
-Build prompt, word for word:
-
-> Following the plan made up in "Nike Pegasus 43 — Mobile Landing Page Plan", build me the Nike shoe landing page using Next.js and styling with Tailwind CSS with a mobile first approach, and seed it with the information provided in the nike_pegasus_size_stock_b2ebb9fac7f74d6a8bb3432d7642176f.json file. For shoe sizes low in stock, give the user a notice if they select a size thats running out by providing a simple message underneath saying "only x left in stock". Name the color of the shoe as a sub title underneath the picture. The layout should hold space for the photos and size buttons, so when the media loads in the layout wont shift.
-
-At 375px wide, Claude Code's first pass already had the right section order and a reserved-space photo box and size grid, so no layout shift showed up right away. I kept that structure as-is. What I changed: the colorway caption, which Claude Code had first placed near the price, got moved underneath the photo carousel per the prompt, and a real bug — the photo skeleton never fading out for already-cached images — got fixed after I spotted it in manual testing.
-
-Mobile check prompt, word for word:
-
-> Using this mobile_check_profile.yaml, record the Slow 4G phone trace with Chrome DevTools MCP. Use a phone screen 375px wide with a 4x CPU slowdown. Report back to me the results. In your report, if the size_grid_shift_px_max fails, report back what causes that shift.
-
-The trace itself came back clean — CLS 0.00, no `layout-shift` events — but the automated check still failed on the first run, and not because of an actual pixel shift: the page had none of the five `data-testid` selectors the check's profile (`Web Platform Slow 4G Mobile Check Profile.yaml`) requires it to read from, and `speed-budget.json` didn't exist at the repo root at all. Two changes made the check pass:
-- Added `data-testid="size-grid"`, `"size-button"` / `"size-button-sold-out"`, `"main-photo"` (on the first, eager-loaded photo), and `"price"` to the elements the profile watches.
-- Added `speed-budget.json` at the repo root with the three required keys (`performance_score_min: 90`, `size_grid_shift_px_max: 0`, `size_button_min_px: 44`) — none looser than the profile's required values, per its policy.
-
 ## Project
 
 - **Framework:** Next.js 16 (App Router), React 19, TypeScript
@@ -72,3 +52,33 @@ src/
   types/          stock.ts — TypeScript types for stock/product data
 public/images/    Placeholder product photos (SVG)
 ```
+
+## Prompt notes
+
+Plan prompt, word for word:
+
+> Write me plan for a phone-first landing page for Nike's customers to buy the new Pegasus 43 running shoe. Place the content in this order: Photos, Price, Sizes, Tech Copy, Reviews. Use the stock list information in nike_pegasus_size_stock.json for the content. Ensure there's to layout-shifts, including holding space for photos and fonts when loading. Give me the plan in headed sections, with each part's order and size at 375 pixels wide.
+
+Build prompt, word for word:
+
+> Following the plan made up in "Nike Pegasus 43 — Mobile Landing Page Plan", build me the Nike shoe landing page using Next.js and styling with Tailwind CSS with a mobile first approach, and seed it with the information provided in the nike_pegasus_size_stock_b2ebb9fac7f74d6a8bb3432d7642176f.json file. For shoe sizes low in stock, give the user a notice if they select a size thats running out by providing a simple message underneath saying "only x left in stock". Name the color of the shoe as a sub title underneath the picture. The layout should hold space for the photos and size buttons, so when the media loads in the layout wont shift.
+
+At 375px wide, Claude Code's first pass already had the right section order and a reserved-space photo box and size grid, so no layout shift showed up right away. I kept that structure as-is. What I changed: the colorway caption, which Claude Code had first placed near the price, got moved underneath the photo carousel per the prompt, and a real bug — the photo skeleton never fading out for already-cached images — got fixed after I spotted it in manual testing.
+
+Mobile check prompt, word for word:
+
+> Using this mobile_check_profile.yaml, record the Slow 4G phone trace with Chrome DevTools MCP. Use a phone screen 375px wide with a 4x CPU slowdown. Report back to me the results. In your report, if the size_grid_shift_px_max fails, report back what causes that shift.
+
+The trace itself came back clean — CLS 0.00, no `layout-shift` events — but the automated check still failed on the first run, and not because of an actual pixel shift: the page had none of the five `data-testid` selectors the check's profile (`Web Platform Slow 4G Mobile Check Profile.yaml`) requires it to read from, and `speed-budget.json` didn't exist at the repo root at all. Two changes made the check pass:
+- Added `data-testid="size-grid"`, `"size-button"` / `"size-button-sold-out"`, `"main-photo"` (on the first, eager-loaded photo), and `"price"` to the elements the profile watches.
+- Added `speed-budget.json` at the repo root with the three required keys (`performance_score_min: 90`, `size_grid_shift_px_max: 0`, `size_button_min_px: 44`) — none looser than the profile's required values, per its policy.
+
+Seed/deploy prompt, word for word:
+
+> Seed the project using the data in "Pegasus Size and Stock Snapshot, 8 December 2026", applying our existing sold-out size design to any sizes with zero stock.
+>
+> Next, link and deploy the project to Vercel using the appropriate Vercel flow. Inspect the build and deployment logs to verify there are no errors, confirm the deployment succeeds, and return the live deployment URL.
+>
+> Once live, run a mobile Lighthouse audit at a 375px viewport width. Specifically check for layout shift (CLS) and verify that images, fonts, and buttons do not shift or move before and after loading. Report any layout issues or performance findings along with the URL.
+
+`src/data/stock.json` was replaced with the new snapshot's 26 rows; no component changes were needed since `SizeGrid` already derives the sold-out/low-stock/in-stock styling purely from each row's `stock_status`. Linking and deploying used the Vercel CLI (`vercel link`, `vercel --prod`) — a browser-approved device login was required first, since the CLI wasn't authenticated in this environment. Build and deployment logs came back clean (dependency install, `next build`, static generation, "Deployment completed"), landing at `https://nike-pegasus-landing.vercel.app`. A Lighthouse mobile audit at 375×812 (device-scale 2) reported Performance 100, CLS 0, and no unsized-image or shift-causing issues — the fixed-aspect photo box, fixed-height size grid, and reserved message slot held up under a real deploy, not just locally. The one audit finding (an `aria-label` on a non-role `div` in the review stars) is a pre-existing accessibility issue unrelated to layout shift or this seeding/deploy task, left as-is.
