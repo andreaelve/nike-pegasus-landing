@@ -4,6 +4,10 @@ A mobile-first product landing page for the Nike Pegasus 43 running shoe, built 
 
 ## Prompt notes
 
+Plan prompt, word for word:
+
+> Write me plan for a phone-first landing page for Nike's customers to buy the new Pegasus 43 running shoe. Place the content in this order: Photos, Price, Sizes, Tech Copy, Reviews. Use the stock list information in nike_pegasus_size_stock.json for the content. Ensure there's to layout-shifts, including holding space for photos and fonts when loading. Give me the plan in headed sections, with each part's order and size at 375 pixels wide.
+
 Build prompt, word for word:
 
 > Following the plan made up in "Nike Pegasus 43 — Mobile Landing Page Plan", build me the Nike shoe landing page using Next.js and styling with Tailwind CSS with a mobile first approach, and seed it with the information provided in the nike_pegasus_size_stock_b2ebb9fac7f74d6a8bb3432d7642176f.json file. For shoe sizes low in stock, give the user a notice if they select a size thats running out by providing a simple message underneath saying "only x left in stock". Name the color of the shoe as a sub title underneath the picture. The layout should hold space for the photos and size buttons, so when the media loads in the layout wont shift.
