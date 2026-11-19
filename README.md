@@ -50,5 +50,3 @@ src/
   types/          stock.ts — TypeScript types for stock/product data
 public/images/    Placeholder product photos (SVG)
 ```
-
-See [PROMPT_NOTES.md](./PROMPT_NOTES.md) for the prompts used to plan and build this project.
