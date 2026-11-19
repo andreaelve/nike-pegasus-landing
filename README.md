@@ -2,6 +2,8 @@
 
 A mobile-first product landing page for the Nike Pegasus 43 running shoe, built with Next.js and Tailwind CSS and seeded from a real stock/inventory JSON file.
 
+**Live:** https://nike-pegasus-landing.vercel.app
+
 ## Prompt notes
 
 Plan prompt, word for word:
