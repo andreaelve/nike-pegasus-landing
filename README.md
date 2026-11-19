@@ -14,6 +14,14 @@ Build prompt, word for word:
 
 At 375px wide, Claude Code's first pass already had the right section order and a reserved-space photo box and size grid, so no layout shift showed up right away. I kept that structure as-is. What I changed: the colorway caption, which Claude Code had first placed near the price, got moved underneath the photo carousel per the prompt, and a real bug — the photo skeleton never fading out for already-cached images — got fixed after I spotted it in manual testing.
 
+Mobile check prompt, word for word:
+
+> Using this mobile_check_profile.yaml, record the Slow 4G phone trace with Chrome DevTools MCP. Use a phone screen 375px wide with a 4x CPU slowdown. Report back to me the results. In your report, if the size_grid_shift_px_max fails, report back what causes that shift.
+
+The trace itself came back clean — CLS 0.00, no `layout-shift` events — but the automated check still failed on the first run, and not because of an actual pixel shift: the page had none of the five `data-testid` selectors the check's profile (`Web Platform Slow 4G Mobile Check Profile.yaml`) requires it to read from, and `speed-budget.json` didn't exist at the repo root at all. Two changes made the check pass:
+- Added `data-testid="size-grid"`, `"size-button"` / `"size-button-sold-out"`, `"main-photo"` (on the first, eager-loaded photo), and `"price"` to the elements the profile watches.
+- Added `speed-budget.json` at the repo root with the three required keys (`performance_score_min: 90`, `size_grid_shift_px_max: 0`, `size_button_min_px: 44`) — none looser than the profile's required values, per its policy.
+
 ## Project
 
 - **Framework:** Next.js 16 (App Router), React 19, TypeScript

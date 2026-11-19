@@ -15,7 +15,10 @@ export default function PriceSection({
         {name}
       </h1>
       <p className="mt-0.5 text-sm text-neutral-500">Style {styleCode}</p>
-      <p className="mt-2 text-xl font-semibold text-neutral-900">
+      <p
+        data-testid="price"
+        className="mt-2 text-xl font-semibold text-neutral-900"
+      >
         {priceLabel}
       </p>
     </section>

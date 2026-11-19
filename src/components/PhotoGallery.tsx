@@ -59,6 +59,7 @@ export default function PhotoGallery({ photos, colorway }: PhotoGalleryProps) {
                 // in which case the "load" event never fires — catch that case here.
                 if (el?.complete) markLoaded(index);
               }}
+              data-testid={index === 0 ? "main-photo" : undefined}
               src={photo.src}
               alt={photo.alt}
               width={800}

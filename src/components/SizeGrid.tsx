@@ -29,6 +29,7 @@ export default function SizeGrid({ sizes, selectedSku, onSelect }: SizeGridProps
 
       {/* Fixed row height (44px) and gap so the grid's footprint never changes. */}
       <div
+        data-testid="size-grid"
         className="mt-3 grid grid-cols-4 gap-2"
         style={{ gridAutoRows: "2.75rem" }}
       >
@@ -41,6 +42,7 @@ export default function SizeGrid({ sizes, selectedSku, onSelect }: SizeGridProps
             <button
               key={size.sku}
               type="button"
+              data-testid={isSoldOut ? "size-button-sold-out" : "size-button"}
               disabled={isSoldOut}
               aria-pressed={isSelected}
               onClick={() => onSelect(size.sku)}
