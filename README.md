@@ -2,6 +2,14 @@
 
 A mobile-first product landing page for the Nike Pegasus 43 running shoe, built with Next.js and Tailwind CSS and seeded from a real stock/inventory JSON file.
 
+## Prompt notes
+
+Build prompt, word for word:
+
+> Following the plan made up in "Nike Pegasus 43 — Mobile Landing Page Plan", build me the Nike shoe landing page using Next.js and styling with Tailwind CSS with a mobile first approach, and seed it with the information provided in the nike_pegasus_size_stock_b2ebb9fac7f74d6a8bb3432d7642176f.json file. For shoe sizes low in stock, give the user a notice if they select a size thats running out by providing a simple message underneath saying "only x left in stock". Name the color of the shoe as a sub title underneath the picture. The layout should hold space for the photos and size buttons, so when the media loads in the layout wont shift.
+
+At 375px wide, Claude Code's first pass already had the right section order and a reserved-space photo box and size grid, so no layout shift showed up right away. I kept that structure as-is. What I changed: the colorway caption, which Claude Code had first placed near the price, got moved underneath the photo carousel per the prompt, and a real bug — the photo skeleton never fading out for already-cached images — got fixed after I spotted it in manual testing.
+
 ## Project
 
 - **Framework:** Next.js 16 (App Router), React 19, TypeScript
